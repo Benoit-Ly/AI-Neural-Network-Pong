@@ -290,5 +290,6 @@ public class AINeuralNetwork : MonoBehaviour {
             dataList.Add(data);
         }
     }
-}
+
 #endif
+}

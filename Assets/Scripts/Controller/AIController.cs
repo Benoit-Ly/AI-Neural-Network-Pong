@@ -3,12 +3,11 @@ using UnityEngine;
 
 public class AIController : PaddleController
 {
-    public struct DebugLine
-    {
-        public Vector2 start;
-        public Vector2 end;
-    }
+    [SerializeField]
+    private EventDispatcher m_EventDispatcher = null;
 
+    [SerializeField]
+    private bool drawForesightLines = true;
     [SerializeField]
     private bool isLearning = false;
     [SerializeField]
@@ -79,6 +78,11 @@ public class AIController : PaddleController
     private void Update()
     {
         MoveToPos(wantedPosY);
+    }
+
+    public void ActivateLearning(bool value)
+    {
+        isLearning = value;
     }
 
     private void Foresight(Vector2 startPos, Vector2 direction)
@@ -219,6 +223,9 @@ public class AIController : PaddleController
 
         if (isLearning)
             LearnForesight(ballStartPoint, ballStartDirection);
+
+        if (m_EventDispatcher)
+            m_EventDispatcher.ExecuteOnForesightComplete(debugLines.ToArray(), realLines.ToArray());
     }
 
     private void ComputeLearning(Vector3 ballPos)
@@ -230,6 +237,11 @@ public class AIController : PaddleController
     {
         ballStartPoint = GameMgr.Instance.Ball.transform.position;
         ballStartDirection = GameMgr.Instance.Ball.LaunchDirection;
+    }
+
+    private void OnRenderObject()
+    {
+        
     }
 
     private void OnDrawGizmos()
